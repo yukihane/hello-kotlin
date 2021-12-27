@@ -44,5 +44,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("ch03.AppKt")
+    mainClass.set(System.getProperty("exec.mainClass") ?: "ch03._3_3_1Kt")
 }
