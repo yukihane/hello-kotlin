@@ -44,5 +44,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("ch04.AppKt")
+    mainClass.set("ch05.AppKt")
 }

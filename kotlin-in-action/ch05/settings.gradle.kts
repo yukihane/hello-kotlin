@@ -7,5 +7,5 @@
  * in the user manual at https://docs.gradle.org/7.3.2/userguide/multi_project_builds.html
  */
 
-rootProject.name = "ch04"
+rootProject.name = "ch05"
 include("app")
