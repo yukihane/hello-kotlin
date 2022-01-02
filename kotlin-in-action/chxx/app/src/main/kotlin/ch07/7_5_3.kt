@@ -2,6 +2,7 @@ package ch07
 
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 open class PropertyChangeAware {
@@ -27,8 +28,13 @@ class ObservableProperty(var propValue: Int, val changeSupport: PropertyChangeSu
 }
 
 class Person2(val name: String, age: Int, salary: Int) : PropertyChangeAware() {
-    var age: Int by ObservableProperty(age, changeSupport)
-    var salary: Int by ObservableProperty(salary, changeSupport)
+
+    private val observer = { prop: KProperty<*>, oldValue: Int, newValue: Int ->
+        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
+    }
+
+    var age: Int by Delegates.observable(age, observer)
+    var salary: Int by Delegates.observable(salary, observer)
 }
 
 fun main() {
