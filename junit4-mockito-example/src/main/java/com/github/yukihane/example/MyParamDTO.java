@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyOutput {
-    private long id;
+public class MyParamDTO {
     private String name;
     private int age;
 }

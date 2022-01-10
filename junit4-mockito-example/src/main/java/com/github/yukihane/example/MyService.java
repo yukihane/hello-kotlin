@@ -1,5 +1,5 @@
 package com.github.yukihane.example;
 
 public interface MyService {
-    MyOutput execute(MyInput param);
+    MyParam execute(MyParam param);
 }

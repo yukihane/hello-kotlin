@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 public class MyController {
 
     private final MyService service;
-    private final MyInputMapper inputMapper;
-    private final MyOutputMapper outputMapper;
+    private final MyParamMapper paramMapper;
 
-    public MyOutputDTO index(MyInputDTO input) {
-        MyInput param = inputMapper.convert(input);
-        MyOutput output = service.execute(param);
-        MyOutputDTO result = outputMapper.convert(output);
-        return result;
+    public MyParamDTO index(final MyParamDTO input) {
+        final MyParam param = paramMapper.convert(input);
+        final MyParam output = service.execute(param);
+        return paramMapper.convert(output);
     }
 }
