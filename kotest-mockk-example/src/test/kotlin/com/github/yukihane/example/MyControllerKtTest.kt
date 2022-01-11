@@ -1,69 +1,64 @@
 package com.github.yukihane.example
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import org.mockito.ArgumentMatchers.any
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.MockitoAnnotations
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.datatest.withData
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 
-@RunWith(Parameterized::class)
-class MyControllerKtTest(private val param: Param) {
+class MyControllerKtTest : FunSpec() {
 
-    @Mock
+    @MockK
     private lateinit var service: MyService
 
-    @Mock
+    @MockK
     private lateinit var outputMapper: MyParamMapper
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var sut: MyController
 
     data class Param(val input: MyParamDTO, val expected: MyParamDTO)
 
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters
-        fun provide(): List<Param> {
-            return listOf(
-                Param(
-                    MyParamDTO("alice", 16),
-                    MyParamDTO("alice", 17)
-                ),
-                Param(
-                    MyParamDTO("bob", 32),
-                    MyParamDTO("bob", 33)
-                )
-            )
+    private val params = listOf(
+        Param(
+            MyParamDTO("alice", 16),
+            MyParamDTO("alice", 17)
+        ),
+        Param(
+            MyParamDTO("bob", 32),
+            MyParamDTO("bob", 33)
+        )
+    )
+
+    init {
+
+        beforeTest {
+            MockKAnnotations.init(this)
         }
-    }
 
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
+        context("normal") {
+            withData<Param>(nameFn = { "${it.input.name} ${it.input.age}" }, params) { param ->
+                val service: MyService = MyServiceImpl()
+                val controller = MyController(service, MyParamMapper.INSTANCE)
+                val res = controller.index(param.input)
+                res shouldBe param.expected
+            }
+        }
 
-    @Test
-    fun normal() {
-        val service: MyService = MyServiceImpl()
-        val controller = MyController(service, MyParamMapper.INSTANCE)
-        val res = controller.index(param.input)
-        assertThat(res).isEqualTo(param.expected)
-    }
+        context("mocking") {
+            withData(nameFn = { "${it.input.name} ${it.input.age}" }, params) { param ->
+                every { outputMapper.convert(any<MyParamDTO>()) } returns mockk()
+                every { service.execute(any()) } returns mockk()
+                val exp = mockk<MyParamDTO>()
+                every { outputMapper.convert(any<MyParam>()) } returns exp
 
-    @Test
-    fun mocking() {
-        `when`(outputMapper.convert(any(MyParamDTO::class.java))).thenReturn(mock(MyParam::class.java))
-        `when`(service.execute(any())).thenReturn(mock(MyParam::class.java))
-        val exp = mock(MyParamDTO::class.java)
-        `when`(outputMapper.convert(any(MyParam::class.java))).thenReturn(exp)
-
-        val res = sut.index(param.input)
-        assertThat(res).isSameAs(exp)
+                val res = sut.index(param.input)
+                res shouldBeSameInstanceAs exp
+            }
+        }
     }
 }
