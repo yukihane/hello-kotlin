@@ -1,0 +1,4 @@
+次の事項の確認サンプルコード。
+
+* Controller の戻り値に sealed interface を利用できる
+* sealed interface 実装は別ファイルでもOK
