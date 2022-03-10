@@ -9,6 +9,13 @@ class Company(
     @GeneratedValue
     var id: Long? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    var name: String,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = [CascadeType.ALL])
     var branches: MutableSet<Branch> = mutableSetOf(),
-)
+) {
+    fun addBranch(branch: Branch) {
+        branches.add(branch)
+        branch.company = this
+    }
+}

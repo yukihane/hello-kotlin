@@ -9,6 +9,8 @@ class Branch(
     @GeneratedValue
     var id: Long? = null,
 
+    var name: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId")
     var company: Company? = null,
