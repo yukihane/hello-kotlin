@@ -8,6 +8,12 @@ import javax.persistence.Persistence
 
 fun main() {
     val emf = Persistence.createEntityManagerFactory("myunit")
+
+    create(emf)
+    read(emf)
+}
+
+fun create(emf: EntityManagerFactory) {
     val em = emf.createEntityManager()
     val c = Company(name = "my company")
 
@@ -22,9 +28,8 @@ fun main() {
     em.persist(c)
     tx.commit()
     em.close()
-
-    read(emf)
 }
+
 
 fun read(emf: EntityManagerFactory) {
     val em = emf.createEntityManager()
