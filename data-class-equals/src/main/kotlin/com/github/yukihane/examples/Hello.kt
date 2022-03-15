@@ -19,5 +19,7 @@ fun main(args: Array<String>) {
     println(p1 == p2) // false
     println(dp1 == dp2) // true
 
+    println(setOf(p1, p2).size) // 2
+    println(setOf(dp1, dp2).size) // 1
 }
 
