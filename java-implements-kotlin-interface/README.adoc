@@ -1,0 +1,3 @@
+"Val cannot be reassigned" error occurs when a Java class implements a Kotlin interface  https://youtrack.jetbrains.com/issue/KT-53911 で報告した問題の再現コードです。
+
+`Person1`, `Person2` の違いは `IPerson` を implements しているかどうかだけですが、これでコンパイルが通るかエラーになるかの差異が出ています。
